@@ -119,6 +119,13 @@ def download_model_files(
 ):
     model_id = data["data"]["model"]["id"]
     stls = data["data"]["model"].get("stls", [])
+
+    if ".3mf" in extensions and not any(f["name"].lower().endswith(".3mf") for f in stls):
+        if ".stl" not in extensions:
+            if verbose:
+                print("ℹ️ No .3mf files found for this model, adding .stl to extensions.")
+            extensions.append(".stl")
+
     files = [f for f in stls if f["name"].lower().endswith(tuple(extensions))]
 
     remaining = []
@@ -164,7 +171,12 @@ def main():
     args = parser.parse_args()
 
     try:
-        model_json = extract_model_json_from_url(args.url, verbose=args.verbose)
+        if args.url.isdigit():
+            model_url = f"https://www.printables.com/model/{args.url}"
+        else:
+            model_url = args.url
+
+        model_json = extract_model_json_from_url(model_url, verbose=args.verbose)
         download_model_files(
             data=model_json,
             output_root=args.output,
