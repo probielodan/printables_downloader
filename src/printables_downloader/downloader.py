@@ -3,7 +3,6 @@ import re
 import sys
 import json
 import time
-import random
 import argparse
 import requests
 from typing import List
@@ -150,8 +149,6 @@ def download_model_files(
                 print(f"❌ Could not download: {file_name}")
         else:
             print(f"⚠️ No link for {file_name}")
-
-        time.sleep(random.uniform(1.0, 2.5))
 
     print("🎉 Done!")
 
